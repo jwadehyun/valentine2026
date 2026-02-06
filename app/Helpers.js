@@ -1,8 +1,10 @@
+import emailjs from '@emailjs/browser';
+
 // Constants
 export const SWEETHEART_MESSAGES = [
-  'BE MINE', 'LOVE YOU', 'CUTIE PIE', 'SWEET', 'XOXO',
-  'HUG ME', 'TRUE LOVE', 'KISS ME', 'MY LOVE', 'SO FINE',
-  'FOREVER', 'YOU & ME', 'SAY YES', 'BE TRUE', 'SMILE'
+  'BE MINE', 'LOVE YOU', 'CUTIE PIE', 'BABY', 'XOXO',
+  'HUG ME', 'TYDJ', 'KISS ME', 'MY LOVE', 'FOREVER', 
+  'YOU & ME', 'SAY YES', 'BABYHIPPO', 'SMILE'
 ];
 
 export const SWEETHEART_COLORS = [
@@ -10,7 +12,7 @@ export const SWEETHEART_COLORS = [
   'bg-green-200', 'bg-blue-200', 'bg-orange-200'
 ];
 
-export const CORRECT_PASSWORD = 'valentine2026';
+export const CORRECT_PASSWORD = '021426';
 
 // Helper function to generate sweethearts
 export function generateSweethearts(count = 15) {
@@ -24,28 +26,35 @@ export function generateSweethearts(count = 15) {
   }));
 }
 
-// Email sending function
-export function sendSurveyEmail(surveyAnswers) {
-  const recipientEmail = 'your-email@example.com'; // Change this to your email
-  const subject = 'Valentine Survey Results - They Said YES! 💝';
-  const body = `
-Survey Results:
-===============
+// Email sending function using EmailJS
+export async function sendSurveyEmail(surveyAnswers) {
+  // EmailJS configuration - GET THESE FROM YOUR EMAILJS DASHBOARD
+  const SERVICE_ID = 'service_8sy9ujo';      // e.g., 'service_abc123'
+  const TEMPLATE_ID = 'template_p0ew6qg';    // e.g., 'template_xyz789'
+  const PUBLIC_KEY = 'n0qtos-mbm6K38ePg';      // e.g., 'abcDEF123xyz'
 
-Question 1: What's your favorite color?
-Answer: ${surveyAnswers.q1}
+  const templateParams = {
+    wakeup: surveyAnswers.q1,
+    lunch: surveyAnswers.q2,
+    ideal_date: surveyAnswers.q3,
+    dinner: surveyAnswers.q4,
+    favorite_color: surveyAnswers.q5,
+    romantic_gesture: surveyAnswers.q6,
+    special_request: surveyAnswers.q7,
+    date: new Date().toLocaleString()
+  };
 
-Question 2: What's your favorite type of flower?
-Answer: ${surveyAnswers.q2}
-
-Question 3: What's your ideal date activity?
-Answer: ${surveyAnswers.q3}
-
-Response to Valentine Question: YES! 💚
-
-Date: ${new Date().toLocaleString()}
-  `;
-  
-  const mailtoLink = `mailto:${recipientEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-  window.open(mailtoLink, '_blank');
+  try {
+    const result = await emailjs.send(
+      SERVICE_ID,
+      TEMPLATE_ID,
+      templateParams,
+      PUBLIC_KEY
+    );
+    console.log('Email sent successfully!', result.text);
+    return { success: true };
+  } catch (error) {
+    console.error('Failed to send email:', error);
+    return { success: false, error };
+  }
 }

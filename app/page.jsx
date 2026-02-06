@@ -15,7 +15,11 @@ export default function ValentineApp() {
   const [surveyAnswers, setSurveyAnswers] = useState({
     q1: '',
     q2: '',
-    q3: ''
+    q3: '',
+    q4: '',
+    q5: '',
+    q6: '',
+    q7: ''
   });
   const [showConfetti, setShowConfetti] = useState(false);
   
